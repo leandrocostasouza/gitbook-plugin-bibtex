@@ -1,62 +1,61 @@
 var bibtexParse = require('bibtex-parser-js');
 var _ = require('lodash');
 var fs = require('fs');
+var bib;
+var bibCount = 0;
 
 module.exports = {
-    book: {
-        assets: './assets',
-        css: [
-            "style.css"
-        ]
-    },
-
     filters: {
         cite: function(key) {
-            var citation = _.find(this.book.bib, {'citationKey': key.toUpperCase()});
-
-            if (citation != undefined) {
+            var citation = _.find(bib, {'citationKey': key.toUpperCase()});
+            if (citation !== undefined) {
                 if (!citation.used) {
                     citation.used = true;
-                    this.book.bibCount++;
-                    citation.number = this.book.bibCount;
+                    bibCount++;
+                    citation.number = bibCount;
                 }
-                return '[' + citation.number + ']';
+                return '<a href="#cite-' + citation.number + '">[' + citation.number + ']</a>';
             } else {
                 return "[Citation not found]";
             }
         }
     },
-
     hooks: {
         init: function() {
-            var bib = fs.readFileSync('literature.bib', 'utf8');
-            this.book.bib = bibtexParse.toJSON(bib);
-            this.book.bibCount = 0;
+             bib = bibtexParse.toJSON(fs.readFileSync(this.options.pluginsConfig.bibtex.bibliography, 'utf8'));
         }
-    },
+    },    
 
     blocks: {
         references: {
             process: function(blk) {
-                var usedBib = _.filter(this.book.bib, 'used');
+                var usedBib = _.filter(bib, 'used');
                 var sortedBib = _.sortBy(usedBib, 'number');
 
                 var result = '<table class="references">';
 
                 sortedBib.forEach(function(item) {
-                    result += '<tr><td>[' + item.number + ']</td><td>';
+                    result += '<tr><td><span class="citation-number" id="cite-' + item.number + '">' + item.number + '</span></td><td>';
 
                     if (item.entryTags.AUTHOR) {
                         result += formatAuthors(item.entryTags.AUTHOR) + ', ';
                     }
                     if (item.entryTags.TITLE) {
-                        result += item.entryTags.TITLE + ', ';
+                        if (item.entryTags.URL) {
+                            result += '<a href="' + item.entryTags.URL + '">' + item.entryTags.TITLE + '</a>, ';
+                        } else {
+                            result += item.entryTags.TITLE + ', ';
+                        }
                     }
                     if (item.entryTags.BOOKTITLE) {
-                        result += '<i>' + item.entryTags.BOOKTITLE + '</i>, '
+                        if (item.entryTags.BOOKURL) {
+                            result += '<a href="' + item.entryTags.BOOKURL + '">' + item.entryTags.BOOKTITLE + '</a>, ';
+                        } else {
+                            result += '<i>' + item.entryTags.BOOKTITLE + '</i>, ';
+                        }
                     }
                     if (item.entryTags.PUBLISHER) {
-                        result += '<i>' + item.entryTags.PUBLISHER + '</i>, '
+                        result += '<i>' + item.entryTags.PUBLISHER + '</i>, ';
                     }
                     if (item.entryTags.YEAR) {
                         result += item.entryTags.YEAR + '.';
