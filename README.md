@@ -9,8 +9,16 @@ Add this to your `book.json`, then run `gitbook install`:
 
 ```
 {
-    "plugins": ["bibtex-citation"]
+    "plugins": [
+        "bibtex"
+    ],
+    "pluginsConfig": {
+      "bibtex": {
+        "bibliography": "bibliography.bib"
+      }
+    }
 }
+
 ```
 
 ### Usage
@@ -22,7 +30,7 @@ You can use the bibtex keys defined within the file to reference the literature.
 {{ "some-key" | cite }}
 ```
 
-You can also add a table of references through:
+You can also add a table of references in last file through:
 
 ```
 {% references %} {% endreferences %}
@@ -30,9 +38,4 @@ You can also add a table of references through:
 
 Only used literature is included in the table of references. They are ordered by the usage within the text.
 
-
-### Limitations
-
-The plugin currently only supports IEEE referencing style.
-Feel free to submit pull requests to add additional styles.
 
