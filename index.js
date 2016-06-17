@@ -14,7 +14,19 @@ module.exports = {
                     bibCount++;
                     citation.number = bibCount;
                 }
-                return '<a href="#cite-' + citation.number + '">[' + citation.number + ']</a>';
+                var tocBibliographyFile;
+                try{
+                    tocBibliographyFile = this.options.pluginsConfig.bibtex.tocfile;
+                }catch (e){
+                    tocBibliographyFile = false;
+                }
+                if(tocBibliographyFile){
+                    return '<a href="'+tocBibliographyFile'.html#cite-' + citation.number + '">[' + citation.number + ']</a>';    
+                }else{
+                    return '<a href="#cite-' + citation.number + '">[' + citation.number + ']</a>';    
+                }
+
+                
             } else {
                 return "[Citation not found]";
             }
