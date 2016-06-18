@@ -21,7 +21,7 @@ module.exports = {
                     tocBibliographyFile = false;
                 }
                 if(tocBibliographyFile){
-                    return '<a href="'+tocBibliographyFile'.html#cite-' + citation.number + '">[' + citation.number + ']</a>';    
+                    return '<a href="'+tocBibliographyFile+'.html#cite-' + citation.number + '">[' + citation.number + ']</a>';    
                 }else{
                     return '<a href="#cite-' + citation.number + '">[' + citation.number + ']</a>';    
                 }

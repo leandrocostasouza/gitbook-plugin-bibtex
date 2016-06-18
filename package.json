@@ -3,7 +3,7 @@
   "description": "Bibtex citations for GitBook",
   "author": "Manuel Mitasch",
   "main": "index.js",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "engines": {
     "gitbook": ">1.x.x"
   },
